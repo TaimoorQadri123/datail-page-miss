@@ -45,11 +45,11 @@ $("#data").html(apple)
 })
 // detail page
 let url = window.location.href;
-console.log(url);
+// console.log(url);
 let getUrl = new URL(url);
-console.log(getUrl)
+// console.log(getUrl)
 let getQueryString  = getUrl.searchParams.get("product");
-console.log(getQueryString);
+// console.log(getQueryString);
 $.ajax({
     url:"assets/data.json",
     type:"get",
@@ -132,21 +132,83 @@ function Decreament(){
 function AddToCart(id){
 // console.log(id)
 // console.log(detailProducts)
+let quantity = $("#number").val();
 $.ajax({
     url:"assets/data.json",
     type:"get",
     success:function(cartProducts){
         $.each(cartProducts,function(cartKeys,cartArrays){
             $.each(cartArrays,function(cartIndex,cartObject){
+               
                 if(cartKeys+cartIndex==id){
-                   let localdata = localStorage.getItem("cartData");
-                //    console.log(localstorage);
+                   let localdata = JSON.parse(localStorage.getItem("cartData"));
+                   console.log(cartObject.name)
                 if(localdata==null){
                     localStorage.setItem("cartData",'[]')
                 }
+               
+                        //  console.log(parseJson);
+let obj = {
+    productId :id,
+    productName:cartObject.name,
+    productPrice:cartObject.price,
+    productImage:cartObject.image,
+    productQuantity:quantity
+}
+localdata.push(obj);
+localStorage.setItem("cartData",JSON.stringify(localdata));
+location.assign("index.html");
+
                 }
+
             })
         })
     }
 })
 }
+// cart count
+let cartData = JSON.parse(localStorage.getItem("cartData"));
+let cart=0;
+if(cartData==null){
+    $("#cartCount").html(0);
+}else{
+ let cartLength = cartData.length;
+// console.log(cartData);
+//  cart=cart+cartLength;
+// console.log(cart);
+$("#cartCount").html(cartLength);
+
+}
+// localStorage.clear()
+
+
+
+// Function to display cart items on cart.html
+function displayCartItems() {
+    let cartData = JSON.parse(localStorage.getItem("cartData"));
+    let cartItemsHTML = '';
+
+    if (cartData && cartData.length > 0) {
+        cartData.forEach(item => {
+            let totalPrice = item.productPrice * item.productQuantity;
+            cartItemsHTML += `
+                <tr>
+                    <td>${item.productName}</td>
+                    <td>Rs: ${item.productPrice}</td>
+                    <td><img src="${item.productImage}" alt="${item.productName}" width="50"></td>
+                    <td>${item.productQuantity}</td>
+                    <td>Rs: ${totalPrice}</td>
+                </tr>
+            `;
+        });
+    } else {
+        cartItemsHTML = '<tr><td colspan="5" class="text-center">Your cart is empty</td></tr>';
+    }
+
+    $("#cartItems").html(cartItemsHTML);
+}
+
+// Call the function when cart.html is loaded
+$(document).ready(function() {
+    displayCartItems();
+});
