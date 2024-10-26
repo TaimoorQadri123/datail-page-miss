@@ -183,7 +183,7 @@ $("#cartCount").html(cartLength);
 
 
 
-// Function to display cart items on cart.html
+//  cart items on cart.html
 function displayCartItems() {
     let cartData = JSON.parse(localStorage.getItem("cartData"));
     let cartItemsHTML = '';
@@ -198,6 +198,12 @@ function displayCartItems() {
                     <td><img src="${item.productImage}" alt="${item.productName}" width="50"></td>
                     <td>${item.productQuantity}</td>
                     <td>Rs: ${totalPrice}</td>
+                    <td><a class="btn btn-info">Edit</a></td>
+                    <td><a class="btn btn-danger">Update</a></td>
+
+            
+
+
                 </tr>
             `;
         });
