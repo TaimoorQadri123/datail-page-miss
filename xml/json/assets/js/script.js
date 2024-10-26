@@ -199,7 +199,8 @@ function displayCartItems() {
                     <td>${item.productQuantity}</td>
                     <td>Rs: ${totalPrice}</td>
                     <td><a class="btn btn-info">Edit</a></td>
-                    <td><a class="btn btn-danger">Update</a></td>
+                    
+                   <td><a onclick="CartDelete('${keys.productId}')"  class="btn btn-danger">Delete</a></td>
 
             
 
@@ -218,3 +219,13 @@ function displayCartItems() {
 $(document).ready(function() {
     displayCartItems();
 });
+function CartDelete(id){
+    for(let index in cartData){
+        if(cartData[index].productId==id){
+            cartData.splice(index,1);
+            alert("cart delete");
+            localStorage.setItem("cartData",JSON.stringify(cartData));
+            location.assign("cart.html")
+        }
+    }
+}
