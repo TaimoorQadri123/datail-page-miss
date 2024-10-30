@@ -1,18 +1,18 @@
-$(document).ready(function(){
+$(document).ready(function() {
     $.ajax({
-        url:"assets/data.json",
-        type:"get",
-        success:function(brands){
-            let apple ="";
-            $.each(brands, function(keys, arrays){
-                $.each(arrays, function(index, objects){
+        url: "assets/data.json",
+        type: "get",
+        success: function(brands) {
+            let apple = "";
+            $.each(brands, function(keys, arrays) {
+                $.each(arrays, function(index, objects) {
                     apple += `<div class="col-lg-3 mt-3">
                                   <div class="card">
                                       <img class="card-img-top" src="${objects.image}" alt="Title" />
                                       <div class="card-body">
                                           <h4 class="card-title">${objects.name}</h4>
                                           <p class="card-text">Rs: ${objects.price}</p>
-                                          <a href="detail.html?product=${keys+index}" class="btn btn-info">detail</a>
+                                          <a href="detail.html?product=${keys + index}" class="btn btn-info">detail</a>
                                       </div>
                                   </div>
                               </div>`;
@@ -27,15 +27,18 @@ $(document).ready(function(){
 let url = window.location.href;
 let getUrl = new URL(url);
 let getQueryString = getUrl.searchParams.get("product");
+let action = getUrl.searchParams.get("action");
+let quantityFromCart = getUrl.searchParams.get("quantity");
+let initialQuantity = quantityFromCart ? quantityFromCart : 1; // Default to 1 if not set
 
 $.ajax({
-    url:"assets/data.json",
-    type:"get",
-    success:function(detailProducts){
-        $.each(detailProducts, function(detKey, detArray){
-            $.each(detArray, function(detIndex, detobjects){
+    url: "assets/data.json",
+    type: "get",
+    success: function(detailProducts) {
+        $.each(detailProducts, function(detKey, detArray) {
+            $.each(detArray, function(detIndex, detobjects) {
                 let concatVal = detKey + detIndex;
-                if(concatVal == getQueryString){
+                if (concatVal == getQueryString) {
                     $("#detailImage").html(`
                         <img class="card-img-top" src="${detobjects.image}" alt="Title" />
                     `);
@@ -45,13 +48,25 @@ $.ajax({
                             <p class="card-text">Rs: ${detobjects.price}</p>
                             <p class="card-text">${detobjects.description}</p>
                             <button type="button" class="btn btn-outline-danger" onclick="Decreament()">-</button>
-                            <input type="number" id="number" value="1" class="" />
+                            <input type="number" id="number" value="${initialQuantity}" class="" />
                             <button type="button" class="btn btn-outline-success" onclick="Increament()">+</button>
                         </div>
-                        <button type="button" class="mt-3 btn btn-outline-primary" onclick="AddToCart('${getQueryString}')">
-                            Add To Cart
-                        </button>
                     `);
+
+                    // Show 'Save Changes' button if in edit mode, else show 'Add to Cart'
+                    if (action === "edit") {
+                        $("#detailDes").append(`
+                            <button type="button" class="mt-3 btn btn-outline-primary" onclick="SaveChanges('${getQueryString}')">
+                                Save Changes
+                            </button>
+                        `);
+                    } else {
+                        $("#detailDes").append(`
+                            <button type="button" class="mt-3 btn btn-outline-primary" onclick="AddToCart('${getQueryString}')">
+                                Add To Cart
+                            </button>
+                        `);
+                    }
                 }
             });
         });
@@ -59,13 +74,13 @@ $.ajax({
 });
 
 // Increase & Decrease quantity functions
-let count = 1;
+let count = initialQuantity; // Use the initial quantity from the URL
 function Increament() {
     count++;
     document.querySelector("#number").value = count;
 }
 function Decreament() {
-    if(count > 1) {
+    if (count > 1) {
         count--;
         document.querySelector("#number").value = count;
     } else {
@@ -82,7 +97,7 @@ function AddToCart(id) {
         success: function(cartProducts) {
             $.each(cartProducts, function(cartKeys, cartArrays) {
                 $.each(cartArrays, function(cartIndex, cartObject) {
-                    if(cartKeys + cartIndex == id) {
+                    if (cartKeys + cartIndex == id) {
                         let localdata = JSON.parse(localStorage.getItem("cartData")) || [];
                         let obj = {
                             productId: id,
@@ -99,6 +114,25 @@ function AddToCart(id) {
             });
         }
     });
+}
+
+// Save changes to cart function for edit mode
+function SaveChanges(id) {
+    let quantity = $("#number").val();
+    let cartData = JSON.parse(localStorage.getItem("cartData")) || [];
+
+    // Update quantity if product is in cart
+    for (let i = 0; i < cartData.length; i++) {
+        if (cartData[i].productId == id) {
+            cartData[i].productQuantity = quantity;
+            break;
+        }
+    }
+
+    // Save updated cart data
+    localStorage.setItem("cartData", JSON.stringify(cartData));
+    alert("Quantity updated successfully!");
+    location.assign("cart.html");
 }
 
 // Display cart items count
@@ -120,7 +154,7 @@ function displayCartItems() {
                     <td><img src="${item.productImage}" alt="${item.productName}" width="50"></td>
                     <td>${item.productQuantity}</td>
                     <td>Rs: ${totalPrice}</td>
-                    <td><a href="detail.html?product=${item.productId}" class="btn btn-info">Edit</a></td>
+                    <td><a href="detail.html?product=${item.productId}&action=edit&quantity=${item.productQuantity}" class="btn btn-info">Edit</a></td>
                     <td><a onclick="CartDelete('${item.productId}')" class="btn btn-danger">Delete</a></td>
                 </tr>
             `;
@@ -140,13 +174,12 @@ $(document).ready(function() {
 // Delete item from cart
 function CartDelete(id) {
     let cartData = JSON.parse(localStorage.getItem("cartData"));
-    for(let index in cartData) {
-        if(cartData[index].productId == id) {
+    for (let index in cartData) {
+        if (cartData[index].productId == id) {
             cartData.splice(index, 1);
             localStorage.setItem("cartData", JSON.stringify(cartData));
-            location.assign("cart.html")
+            location.assign("cart.html");
             alert("Item deleted from cart");
-
             break;
         }
     }
