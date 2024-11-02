@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Softech [
-    <!ELEMENT name"department" (Developers,IT,)+>
-    <!ELEMENT senior-developer (#PCDATA)>
-    <!ELEMENT name (#PCDATA)>
-    <!ELEMENT course (#PCDATA)>
+ 
 
 
 ]>
