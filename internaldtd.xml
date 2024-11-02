@@ -1,15 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE students [
-    <!ELEMENT students (id,name,course)+>
-    <!ELEMENT id (#PCDATA)>
+<!DOCTYPE Softech [
+    <!ELEMENT name"department" (Developers,IT,)+>
+    <!ELEMENT senior-developer (#PCDATA)>
     <!ELEMENT name (#PCDATA)>
     <!ELEMENT course (#PCDATA)>
 
 
 ]>
-<students>
+<!-- <students>
     <id></id>
     <name></name>
     <course></course>
    
-</students>
+</students> -->
+<softtech>
+    <department name="developers">
+        <senior-developer>
+            <id>7085</id>
+            <name>hammad</name>
+            <email>hammad@gmail.com</email>
+            <post>HOD</post>
+            <salary>100000</salary>
+        </senior-developer>
+        <junior-developer>
+            <id>7086</id>
+            <name>junaid</name>
+            <email>junaid#@gmail.com</email>
+            <post>intership</post>
+            <salary>15000</salary>
+        </junior-developer>
+        
+
+    </department>
+
+    <department name="IT">
+        <senior-developer>
+            <id>1056</id>
+            <name>fiza</name>
+            <email>fiza@gmail.com</email>
+            <post>designer</post>
+            <salary>35000</salary>
+        </senior-developer>
+        <junior-developer>
+            <id>1059</id>
+            <name>amar</name>
+            <email>amar@gmail.com</email>
+            <post>interni</post>
+            <salary>10000</salary>
+        </junior-developer>
+        
+
+    </department>
+</softtech>
