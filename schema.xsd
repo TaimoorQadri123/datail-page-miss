@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="organization">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="employees">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="id" type="xsd:positiveInteger"></xsd:element>
+                            <xsd:element name="name" >
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:pattern value="[a-z\s]{3,16}"></xsd:pattern>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+            <xsd:element name="age"  >
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:int">
+                        <xsd:pattern value="[1-100]{1,15}"></xsd:pattern>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="client">
+
+    </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+       
+
+        
+    </xsd:element>
+    
+
+</xsd:schema>
